@@ -1,5 +1,5 @@
 #Estimate a model
-
+rm(list = ls())
 library(knitr)
 library("readr")
 library("tidyverse")
@@ -19,6 +19,7 @@ glimpse(airbnb)
 
 
 #cleaning here
+airbnb_clean <- airbnb %>% mutate(price = exp(log_price))
 #should bathrooms be a factor?
 #first review should be a date
 #response rate should be a double
@@ -45,6 +46,8 @@ airbnb_test$lm_preds <- predict(lm_mod, newdata = airbnb_test)
 
 rsq(airbnb_train, log_price, lm_preds)
 rsq(airbnb_test, log_price, lm_preds)
+
+#results df
 
 
 
