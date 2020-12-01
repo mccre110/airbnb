@@ -64,7 +64,7 @@ airbnb_clean <- airbnb_clean %>% filter(!is.na(price),
 
 
 #test train split
-airbnb_split <- initial_split(airbnb, p = 0.8)
+airbnb_split <- initial_split(airbnb_clean, p = 0.8)
 airbnb_train <- training(airbnb_split)
 airbnb_test <- testing(airbnb_split)
 
@@ -79,8 +79,8 @@ airbnb_train$lm_preds <- predict(lm_mod, newdata = airbnb_train)
 
 airbnb_test$lm_preds <- predict(lm_mod, newdata = airbnb_test)
 
-rsq(airbnb_train, log_price, lm_preds)
-rsq(airbnb_test, log_price, lm_preds)
+rsq(airbnb_train, price, lm_preds)
+rsq(airbnb_test, price, lm_preds)
 
 
 
