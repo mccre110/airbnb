@@ -13,13 +13,12 @@ library('broom')
 library('yardstick')
 
 
-
+#load data
 airbnb <- read.csv(here::here("datasets", "airbnb.csv"))
 glimpse(airbnb)
 
 
 #cleaning here
-
 airbnb_clean <- airbnb %>% as_tibble() %>%
   mutate(price = exp(log_price)) %>%
   mutate(host_since = as.Date(host_since)) %>%
@@ -39,7 +38,8 @@ airbnb_clean <- airbnb %>% as_tibble() %>%
          -thumbnail_url,
          -zipcode) 
 
-airbnb_clean <- airbnb_clean %>% filter(!is.na(price), 
+airbnb_clean <- airbnb_clean %>% filter(
+        !is.na(price), 
         !is.na(property_type),
         !is.na(room_type),
         !is.na(accommodates),
@@ -65,15 +65,15 @@ airbnb_test <- testing(airbnb_split)
 
 
 #linear regression
-lm_mod <- lm(log_price ~ beds + bedrooms + city + room_type, 
+lm_mod <- lm(price ~ beds + bedrooms + city + room_type, 
               data = airbnb_train)
 summary(lm_mod)
 
-
+#predict
 airbnb_train$lm_preds <- predict(lm_mod, newdata = airbnb_train)
-
 airbnb_test$lm_preds <- predict(lm_mod, newdata = airbnb_test)
 
+#accuracy
 rsq(airbnb_train, price, lm_preds)
 rsq(airbnb_test, price, lm_preds)
 
