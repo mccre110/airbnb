@@ -14,14 +14,16 @@ library('yardstick')
 
 
 
-airbnb <- read.csv(here::here("datasets", "airbnb.csv"), stringsAsFactors = TRUE)
+airbnb <- read.csv(here::here("datasets", "airbnb.csv"))
 glimpse(airbnb)
 
 
 #cleaning here
 
 airbnb_clean <- airbnb %>% as_tibble() %>%
-  mutate(price = exp(log_price)) %>% 
+  mutate(price = exp(log_price)) %>%
+  mutate(host_since = as.Date(host_since)) %>%
+  mutate(host_response_rate = parse_number(host_response_rate)) %>%
   mutate_if(is.character, as.factor) %>% 
   select(-id, 
          -log_price, 
@@ -30,7 +32,6 @@ airbnb_clean <- airbnb %>% as_tibble() %>%
          -first_review, 
          -host_has_profile_pic, 
          -host_identity_verified,
-         -host_response_rate, 
          -last_review, 
          -latitude,
          -longitude,
@@ -47,20 +48,14 @@ airbnb_clean <- airbnb_clean %>% filter(!is.na(price),
         !is.na(cancellation_policy),
         !is.na(cleaning_fee),
         !is.na(city),
+        !is.na(host_since),
+        !is.na(host_response_rate),
         !is.na(instant_bookable),
         !is.na(neighbourhood),
         !is.na(number_of_reviews),
         !is.na(review_scores_rating),
         !is.na(bedrooms),
         !is.na(beds))
-
-          
-#should bathrooms be a factor?
-#first review should be a date
-#response rate should be a double
-#hot_since shouls be a date
-#last review should be a date
-#convert log price to price 
 
 
 #test train split
