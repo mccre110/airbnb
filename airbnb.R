@@ -1,4 +1,8 @@
-#Estimate a model
+#Estimate a model - Final Project
+# Corey McCrea
+# Jared Chavez
+# Will Crewe
+# Yu Akimoto
 rm(list = ls())
 library(knitr)
 library("readr")
@@ -65,7 +69,10 @@ airbnb_test <- testing(airbnb_split)
 
 
 #linear regression
-lm_mod <- lm(price ~ beds + bedrooms + city + room_type, 
+lm_mod <- lm(price ~  beds + bedrooms + city + room_type +
+                      accommodates+ bed_type + cancellation_policy +
+                      cleaning_fee + host_response_rate + number_of_reviews +
+                      review_scores_rating, 
               data = airbnb_train)
 summary(lm_mod)
 
@@ -74,6 +81,9 @@ airbnb_train$lm_preds <- predict(lm_mod, newdata = airbnb_train)
 airbnb_test$lm_preds <- predict(lm_mod, newdata = airbnb_test)
 
 #accuracy
+mae(airbnb_train, price, lm_preds)
+mae(airbnb_test, price, lm_preds)
+
 rsq(airbnb_train, price, lm_preds)
 rsq(airbnb_test, price, lm_preds)
 
