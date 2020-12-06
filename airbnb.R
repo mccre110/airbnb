@@ -115,3 +115,40 @@ mae(airbnb_test, price, dt_preds)
 
 rsq(airbnb_train, price, dt_preds)
 rsq(airbnb_test, price, dt_preds)
+
+
+
+
+
+
+##Elastic Net
+alpha_list <- seq(0,1, by = 0.1)
+enet_mod <- cva.glmnet(price ~  beds + bedrooms + city + room_type +
+                         accommodates+ bed_type + cancellation_policy +
+                         cleaning_fee + host_response_rate + number_of_reviews +
+                         review_scores_rating, 
+                       data = airbnb_train,
+                       alpha = alpha_list)
+print(enet_mod)
+
+#Min Loss Plot
+minlossplot(enet_mod, 
+            cv.type = "min")
+
+lasso_mod <- cv.glmnet(price ~  beds + bedrooms + city + room_type +
+                         accommodates+ bed_type + cancellation_policy +
+                         cleaning_fee + host_response_rate + number_of_reviews +
+                         review_scores_rating, 
+                       data = airbnb_train, alpha = 1)
+print(lasso_mod)
+
+#Predict
+airbnb_train$lo_preds <- predict(lasso_mod, s = lasso_mod$lambda.min, newdata = airbnb_train)
+airbnb_test$lo_preds <- predict(lasso_mod, s = lasso_mod$lambda.min, newdata = airbnb_test)
+
+#Accuracy
+mae(airbnb_train, price, as.vector(lo_preds))
+mae(airbnb_test, price, as.vector(lo_preds))
+
+rsq(airbnb_train, price, as.vector(lo_preds))
+rsq(airbnb_test, price, as.vector(lo_preds))
