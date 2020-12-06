@@ -102,8 +102,9 @@ airbnb_tree <- ctree(price ~  beds + bedrooms + city + room_type +
                        accommodates+ bed_type + cancellation_policy +
                        cleaning_fee + host_response_rate + number_of_reviews +
                        review_scores_rating, 
+                     maxdepth = 4,
                      data = airbnb_train)
-print(airbnb_tree)
+plot(airbnb_tree)
 
 #predict
 airbnb_train$dt_preds <- predict(airbnb_tree, newdata = airbnb_train)
@@ -152,3 +153,7 @@ mae(airbnb_test, price, as.vector(lo_preds))
 
 rsq(airbnb_train, price, as.vector(lo_preds))
 rsq(airbnb_test, price, as.vector(lo_preds))
+
+
+
+
