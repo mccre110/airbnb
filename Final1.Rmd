@@ -185,6 +185,18 @@ lasso_mod <- cv.glmnet(price ~  beds + bedrooms + city + room_type +
                        data = airbnb_train, alpha = 1)
 print(lasso_mod)
 ```
+#Coefs
+```{r}
+#Coefs
+lasso_coefs <- data.frame(
+  `lasso_min` = coef(lasso_mod, s = lasso_mod$lambda.min) %>%
+    as.matrix() %>% data.frame() %>% round(3),
+  `lasso_1se` = coef(lasso_mod, s = lasso_mod$lambda.1se) %>% 
+    as.matrix() %>% data.frame() %>% round(3)
+) %>%  rename(`lasso_min` = 1, `lasso_1se` = 2)
+
+print(lasso_coefs)
+```
 
 
 
