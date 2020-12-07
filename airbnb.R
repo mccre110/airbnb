@@ -96,13 +96,11 @@ rsq(airbnb_test, price, lm_preds)
 
 
 
-
 ##Decision Tree
 airbnb_tree <- ctree(price ~  beds + bedrooms + city + room_type +
                        accommodates+ bed_type + cancellation_policy +
                        cleaning_fee + host_response_rate + number_of_reviews +
-                       review_scores_rating, 
-                     maxdepth = 4,
+                       review_scores_rating, maxdepth = 4,
                      data = airbnb_train)
 plot(airbnb_tree)
 
@@ -143,6 +141,16 @@ lasso_mod <- cv.glmnet(price ~  beds + bedrooms + city + room_type +
                        data = airbnb_train, alpha = 1)
 print(lasso_mod)
 
+#Coefs
+lasso_coefs <- data.frame(
+  `lasso_min` = coef(lasso_mod, s = lasso_mod$lambda.min) %>%
+    as.matrix() %>% data.frame() %>% round(3),
+  `lasso_1se` = coef(lasso_mod, s = lasso_mod$lambda.1se) %>% 
+    as.matrix() %>% data.frame() %>% round(3)
+) %>%  rename(`lasso_min` = 1, `lasso_1se` = 2)
+
+print(lasso_coefs)
+
 #Predict
 airbnb_train$lo_preds <- predict(lasso_mod, s = lasso_mod$lambda.min, newdata = airbnb_train)
 airbnb_test$lo_preds <- predict(lasso_mod, s = lasso_mod$lambda.min, newdata = airbnb_test)
@@ -154,6 +162,8 @@ mae(airbnb_test, price, as.vector(lo_preds))
 rsq(airbnb_train, price, as.vector(lo_preds))
 rsq(airbnb_test, price, as.vector(lo_preds))
 
-
+ggplot(airbnb_test, aes(x = lm_preds, y = price- lm_preds)) + geom_point()
+ggplot(airbnb_test, aes(x = dt_preds, y = price- dt_preds)) + geom_point()
+ggplot(airbnb_test, aes(x = lo_preds, y = price- lo_preds)) + geom_point()
 
 
