@@ -13,6 +13,8 @@ library('glmnetUtils')
 library("ggplot2")
 library("ggridges")
 library('forcats')
+library('sjPlot')
+library('tidymodels')
 library('broom')
 library('yardstick')
 library(partykit)
@@ -79,6 +81,7 @@ lm_mod <- lm(price ~  beds + bedrooms + city + room_type +
                       review_scores_rating, 
               data = airbnb_train)
 summary(lm_mod)
+plot_model(lm_mod)
 
 #predict
 airbnb_train$lm_preds <- predict(lm_mod, newdata = airbnb_train)
