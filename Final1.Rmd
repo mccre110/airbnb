@@ -1,7 +1,7 @@
 ---
 title: "Estimate a model - Final Project"
 author: "Corey McCrea, Jared Chavez, Will Crewe, Yu Akimoto"
-date: "12/1/2020"
+date: "12/18/2020"
 output: html_document
 ---
 
@@ -19,6 +19,8 @@ library("ggridges")
 library('forcats')
 library('broom')
 library('yardstick')
+library('sjPlot')
+library('tidymodels')
 library(partykit)
 library(PerformanceAnalytics)
 library(rpart)       
@@ -93,6 +95,7 @@ lm_mod <- lm(price ~  beds + bedrooms + city + room_type +
                       review_scores_rating, 
               data = airbnb_train)
 summary(lm_mod)
+plot_model(lm_mod)
 ```
 
 
